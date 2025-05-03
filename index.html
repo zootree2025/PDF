@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Word to PPT Converter</title>
+    <title>Word轉PPT轉換器</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -42,39 +42,71 @@
 </head>
 <body>
     <header>
-        <h1>Word to PPT Converter</h1>
+        <h1>Word轉PPT轉換器</h1>
     </header>
     <main>
-        <h2>Upload your Word file to convert it to a PowerPoint presentation</h2>
+        <h2>上傳您的Word文件以轉換為PowerPoint簡報</h2>
         <div class="file-input">
             <input type="file" id="wordFile" accept=".doc, .docx">
         </div>
-        <button onclick="convertWordToPPT()">Convert</button>
+        <button onclick="convertWordToPPT()">轉換</button>
         <p id="status"></p>
     </main>
     <footer>
-        <p>© 2025 Word to PPT Converter</p>
+        <p>© 2025 Word轉PPT轉換器</p>
     </footer>
+    <script src="mammoth.browser.min.js"></script>
+    <script src="pptxgen.bundle.js"></script>
     <script>
-        function convertWordToPPT() {
+        async function convertWordToPPT() {
             const fileInput = document.getElementById('wordFile');
             const status = document.getElementById('status');
 
             if (!fileInput.files.length) {
-                status.textContent = 'Please upload a Word file.';
+                status.textContent = '請上傳Word文件';
                 status.style.color = 'red';
                 return;
             }
 
             const file = fileInput.files[0];
-            status.textContent = `Processing file: ${file.name}`;
+            status.textContent = `正在處理文件: ${file.name}`;
             status.style.color = 'black';
 
-            // Placeholder for conversion logic
-            setTimeout(() => {
-                status.textContent = 'Conversion completed! (Note: This is a placeholder)';
+            try {
+                const arrayBuffer = await file.arrayBuffer();
+                
+                // 使用mammoth.js提取文本
+                const result = await mammoth.extractRawText({arrayBuffer: arrayBuffer});
+                const text = result.value;
+                
+                // 創建PPT
+                const pptx = new PptxGenJS();
+                
+                // 分割文本為段落
+                const paragraphs = text.split('\n');
+                paragraphs.forEach(paragraph => {
+                    if (paragraph.trim()) {
+                        const slide = pptx.addSlide();
+                        slide.addText(paragraph, {
+                            x: 1, y: 1, w: 8, h: 5,
+                            fontSize: 24,
+                            align: 'center'
+                        });
+                    }
+                });
+
+                // 生成PPT文件
+                pptx.writeFile({
+                    fileName: file.name.replace(/\.[^/.]+$/, '') + '.pptx'
+                });
+                
+                status.textContent = '轉換完成！';
                 status.style.color = 'green';
-            }, 2000);
+                
+            } catch (error) {
+                status.textContent = `轉換失敗: ${error.message}`;
+                status.style.color = 'red';
+            }
         }
     </script>
 </body>
