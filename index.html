@@ -1,56 +1,81 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TXT 轉 PPT 工具</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- 使用適用於瀏覽器的 PptxGenJS 版本 -->
-    <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.11.0/dist/pptxgen.bundle.js"></script>
+    <title>Word to PPT Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 1rem 0;
+        }
+        main {
+            margin: 2rem;
+        }
+        .file-input {
+            margin: 1rem 0;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        footer {
+            margin-top: 2rem;
+            color: #666;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>TXT 轉 PPT 工具</h1>
-
-        <div id="convertForm">
-            <div class="form-group">
-                <label for="txtFile">輸入 TXT 檔案：</label>
-                <input type="file" id="txtFile" name="txtFile" accept=".txt" required>
-            </div>
-
-            <div class="form-group">
-                <label for="fontColor">字體顏色：</label>
-                <input type="color" id="fontColor" name="fontColor" value="#000000">
-                <span class="color-preview" id="fontColorPreview"></span>
-            </div>
-
-            <div class="form-group">
-                <label for="bgColor">背景顏色：</label>
-                <input type="color" id="bgColor" name="bgColor" value="#FFFFFF">
-                <span class="color-preview" id="bgColorPreview"></span>
-            </div>
-
-            <div class="form-group">
-                <button type="button" id="convertBtn">轉換</button>
-            </div>
+    <header>
+        <h1>Word to PPT Converter</h1>
+    </header>
+    <main>
+        <h2>Upload your Word file to convert it to a PowerPoint presentation</h2>
+        <div class="file-input">
+            <input type="file" id="wordFile" accept=".doc, .docx">
         </div>
+        <button onclick="convertWordToPPT()">Convert</button>
+        <p id="status"></p>
+    </main>
+    <footer>
+        <p>© 2025 Word to PPT Converter</p>
+    </footer>
+    <script>
+        function convertWordToPPT() {
+            const fileInput = document.getElementById('wordFile');
+            const status = document.getElementById('status');
 
-        <div id="result" class="hidden">
-            <h2>轉換完成</h2>
-            <p>您的 PPT 檔案已準備好下載</p>
-            <a id="downloadLink" href="#" class="download-btn">下載 PPT</a>
-        </div>
+            if (!fileInput.files.length) {
+                status.textContent = 'Please upload a Word file.';
+                status.style.color = 'red';
+                return;
+            }
 
-        <div class="instructions">
-            <h3>TXT 檔案格式說明</h3>
-            <ul>
-                <li>使用兩個以上空白行分隔不同投影片</li>
-                <li>使用 /N 在同一張投影片中換行</li>
-                <li>請確保 TXT 檔案使用 UTF-8 編碼</li>
-            </ul>
-        </div>
-    </div>
+            const file = fileInput.files[0];
+            status.textContent = `Processing file: ${file.name}`;
+            status.style.color = 'black';
 
-    <script src="script.js"></script>
+            // Placeholder for conversion logic
+            setTimeout(() => {
+                status.textContent = 'Conversion completed! (Note: This is a placeholder)';
+                status.style.color = 'green';
+            }, 2000);
+        }
+    </script>
 </body>
 </html>
